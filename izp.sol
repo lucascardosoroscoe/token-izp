@@ -10,17 +10,17 @@ contract IZPToken is ERC20, Ownable {
     event TokensBurned(uint256 amount);
     event BuybackExecuted(uint256 amount);
 
-    constructor() ERC20("IngressoZapp Token", "IZP") {
+    constructor() ERC20("IngressoZapp Token", "IZP") Ownable(msg.sender) {
         _mint(msg.sender, MAX_SUPPLY);
     }
 
-    /// @notice Permite que o dono do contrato queime tokens mantidos pelo próprio contrato
+    /// @notice Queima tokens mantidos pelo contrato
     function burn(uint256 amount) external onlyOwner {
         _burn(address(this), amount);
         emit TokensBurned(amount);
     }
 
-    /// @notice Simula a recompra e queima dos tokens usando saldo disponível no contrato
+    /// @notice Recompra e queima tokens disponíveis no saldo do contrato
     function simulateBuyback(uint256 amount) external onlyOwner {
         require(balanceOf(address(this)) >= amount, "Saldo insuficiente no contrato");
         _burn(address(this), amount);
